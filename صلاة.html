@@ -25,15 +25,15 @@
             --church-cream: #fffef9;
             --church-bg: #0e1a30;
             --church-bg-light: #162244;
-            --text-primary: #f0e8d8;
-            --text-secondary: #d8cdb8;
-            --text-muted: #9a8e78;
+            --text-primary: #ffffff;
+            --text-secondary: #f3f4f6;
+            --text-muted: #9ca3af;
             --shadow-soft: 0 4px 16px rgba(0,0,0,0.25);
             --shadow-medium: 0 8px 32px rgba(0,0,0,0.35);
             --shadow-gold: 0 4px 20px rgba(212, 168, 67, 0.2);
-            --glass-bg: rgba(20, 35, 65, 0.65);
-            --glass-border: rgba(212, 168, 67, 0.18);
-            --glass-blur: 16px;
+            --glass-bg: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(212, 168, 67, 0.22);
+            --glass-blur: 20px;
         }
         
         * {
@@ -282,12 +282,12 @@
             transform: rotate(90deg);
         }
         
-        /* Navigation Menu - Scrollable */
         #navMenu {
             position: fixed;
             bottom: 100px;
             left: 30px;
             width: 340px;
+            height: 70vh;
             max-height: 75vh;
             background: var(--glass-bg);
             backdrop-filter: blur(var(--glass-blur));
@@ -295,10 +295,22 @@
             border-radius: 16px;
             box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px var(--glass-border);
             z-index: 999;
-            display: none;
+            display: flex;
             flex-direction: column;
             border: 1px solid var(--glass-border);
             overflow: hidden;
+            
+            /* transitions */
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        #navMenu.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
         }
         
         .nav-header {
@@ -461,11 +473,11 @@
         }
         
         .prayer-text {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             text-align: justify;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
             color: var(--text-secondary);
-            line-height: 2.1;
+            line-height: 2.2;
             position: relative;
             z-index: 1;
         }
@@ -586,7 +598,7 @@
         /* Smooth scrolling */
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 20px;
+            scroll-padding-top: 85px;
         }
         
         /* Highlight animation */
@@ -682,6 +694,91 @@
         
         #backToTop.show {
             display: flex;
+        }
+
+        /* Music vinyl toggle button */
+        .music-toggle-btn {
+            position: fixed;
+            bottom: calc(30px + env(safe-area-inset-bottom, 0px));
+            left: 105px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: #111827;
+            border: 2px solid var(--church-gold);
+            box-shadow: 0 4px 20px rgba(212, 168, 67, 0.25), var(--shadow-medium);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+        
+        .music-toggle-btn:hover {
+            transform: scale(1.1);
+            border-color: var(--church-gold-glow);
+            box-shadow: 0 6px 30px rgba(212, 168, 67, 0.4);
+        }
+        
+        /* Vinyl disk appearance */
+        .vinyl-disk {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #374151 20%, #111827 40%, #030712 70%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.4);
+            /* Subtle lines of vinyl */
+            background-image: 
+                radial-gradient(circle, transparent 30%, rgba(255,255,255,0.03) 31%, rgba(255,255,255,0.03) 33%, transparent 34%),
+                radial-gradient(circle, transparent 50%, rgba(255,255,255,0.03) 51%, rgba(255,255,255,0.03) 53%, transparent 54%);
+        }
+        
+        .vinyl-label {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--church-gold);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .vinyl-label::after {
+            content: '';
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #111827;
+        }
+        
+        /* Vinyl rotation animation when playing */
+        .music-toggle-btn.playing .vinyl-disk {
+            animation: spinVinyl 3.5s linear infinite;
+        }
+        
+        @keyframes spinVinyl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .music-toggle-btn {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                left: 90px;
+            }
+            .vinyl-disk {
+                width: 40px;
+                height: 40px;
+            }
         }
     </style>
 </head>
@@ -982,6 +1079,16 @@
         <p class="mt-2 small" style="opacity: 0.8;"> نورت مؤتمر الشباب 2026 </p>
     </footer>
     
+    <!-- Music Player Background -->
+    <audio id="bg-music" loop src="https://incompetech.com/music/royalty-free/mp3-royaltyfree/Gymnopedie%20No%201.mp3"></audio>
+
+    <!-- Music Toggle Button (Vinyl Disk) -->
+    <button id="musicToggle" class="music-toggle-btn" title="تشغيل/إيقاف الموسيقى">
+        <div class="vinyl-disk">
+            <div class="vinyl-label"></div>
+        </div>
+    </button>
+
     <!-- Navigation Button -->
     <button id="navToggle" title="قائمة الأقسام">
         <i class="fas fa-list"></i>
@@ -1050,20 +1157,20 @@
             $('#navToggle').click(function(e) {
                 e.stopPropagation();
                 $(this).toggleClass('active');
-                $('#navMenu').slideToggle(300);
+                $('#navMenu').toggleClass('show');
             });
             
             // Close navigation menu
             $('#navClose').click(function(e) {
                 e.stopPropagation();
-                $('#navMenu').slideUp(300);
+                $('#navMenu').removeClass('show');
                 $('#navToggle').removeClass('active');
             });
             
             // Close menu when clicking outside
             $(document).click(function(e) {
                 if (!$(e.target).closest('#navMenu, #navToggle').length) {
-                    $('#navMenu').slideUp(300);
+                    $('#navMenu').removeClass('show');
                     $('#navToggle').removeClass('active');
                 }
             });
@@ -1076,17 +1183,16 @@
                 
                 if (targetSection.length) {
                     // Close menu first
-                    $('#navMenu').slideUp(300);
+                    $('#navMenu').removeClass('show');
                     $('#navToggle').removeClass('active');
                     
-                    // Smooth scroll with offset
-                    const headerOffset = 20;
-                    const elementPosition = targetSection.offset().top;
-                    const offsetPosition = elementPosition - headerOffset;
+                    // Smooth scroll with dynamic offset (nav bar height + 15px spacing)
+                    const headerHeight = $('.app-nav').outerHeight() || 65;
+                    const offsetPosition = targetSection.offset().top - headerHeight - 15;
                     
                     $('html, body').animate({
                         scrollTop: offsetPosition
-                    }, 700);
+                    }, 500);
                     
                     // Highlight section temporarily
                     targetSection.addClass('section-highlight');
@@ -1168,6 +1274,47 @@
             
             // Initialize with first section active
             $('.nav-item:first').addClass('active');
+
+            // Music playback controls
+            (function() {
+                const audio = document.getElementById('bg-music');
+                const toggleBtn = $('#musicToggle');
+                if (!audio || !toggleBtn.length) return;
+                
+                function playAudio() {
+                    audio.play().then(() => {
+                        toggleBtn.addClass('playing');
+                    }).catch(err => {
+                        console.log('Autoplay blocked. Adding first interaction fallback.');
+                        // Fallback: Play on first user click or touch anywhere on the page
+                        $(document).one('click touchstart', function() {
+                            if (audio.paused) {
+                                audio.play().then(() => {
+                                    toggleBtn.addClass('playing');
+                                }).catch(e => console.log('Interactive play failed:', e));
+                            }
+                        });
+                    });
+                }
+                
+                function toggleAudio() {
+                    if (audio.paused) {
+                        playAudio();
+                    } else {
+                        audio.pause();
+                        toggleBtn.removeClass('playing');
+                    }
+                }
+                
+                // Try playing immediately on load
+                playAudio();
+                
+                // Toggle music on clicking the vinyl button
+                toggleBtn.click(function(e) {
+                    e.stopPropagation();
+                    toggleAudio();
+                });
+            })();
             
             // Improve keyboard navigation
             $(document).keydown(function(e) {
